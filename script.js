@@ -1,32 +1,22 @@
-let result = document.getElementById('result');
-let searchBtn = document.getElementById('search-btn');
-let userInput = document.getElementById('user-input');
-let url = "https://www.themealdb.com/api/json/v1/1/search.php?s=";
+let randomMealsButton = document.getElementById('randomMealsButton')
+let mealContainer = document.getElementById('mealContainer')
 
-// Add EventListener to the search button
-searchBtn.addEventListener("click", searchMeal);
+// Add EventListener to the generate random meal button
 
-function searchMeal() {
-    const searchTerm = userInput.value.trim();
-
-    if (searchTerm !== "") {
-        fetch(url + searchTerm)
-        .then(response => response.json())
-        .then(data => {
-            displayMeal(data.meals[0]);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            result.innerHTML = '<p>Sorry, something went wrong. Please try again later.</p>';
-        });
-    } else {
-        result.innerHTML = '<p>Please enter a meal name.</p>';
-    }
-}
-
-function displayMeal(meal) {
+randomMealsButton.addEventListener("click", () => {
+    axios.get("https://www.themealdb.com/api/json/v1/1/random.php")
+    .then(response => {
+        createMeal(response.data.meals[0]);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+});
+ 
+        
+function createMeal(meal) {
     if (meal) {
-        result.innerHTML = `
+        mealContainer.innerHTML = `
             <div class="meal">
                 <h3>${meal.strMeal}</h3>
                 <img src="${meal.strMealThumb}" alt="${meal.strMeal}" />
@@ -43,7 +33,7 @@ function displayMeal(meal) {
             </div>
         `;
     } else {
-        result.innerHTML = '<p>No meal found. Please try again.</p>';
+        mealContainer.innerHTML = '<p>No meal found. Please try again.</p>';
     }
 }
 // to show list of ingredients 
